@@ -32,8 +32,18 @@ uniform float Gmut;
 uniform float Boff;
 uniform float Bmut;
 uniform float Tmut;
-
+uniform float Staralike;
+uniform float darkSpots;
 uniform float camRot;
+
+
+
+uniform float thunderR;
+uniform float thunderG;
+uniform float thunderB;
+uniform float thunderStrength;
+uniform float thunderInterval;
+uniform float thunderSize;
 
 uniform float perlinDepth;
 
@@ -168,7 +178,7 @@ vec2 map( in vec2 uv )
     uv.x *= strX;
     //rotate ballball
     uv.x += movX * iGlobalTime;
-    uv.y *= strY;
+    uv.y *= 1.0;
     uv.y += movY * iGlobalTime;
     return uv;
 }
@@ -188,12 +198,42 @@ float doCastSphere( in vec3 p, in vec3 rd )
     return -1.0;
 }
 
+// vec3 thunder(in vec2 uv) {
+//     float p = (PerlinNoise2D(uv.x * 30.0, uv.y * 30.0));
+//     return p * p * p * vec3(1.0,1.0,1.0) * 50.0;
+// }
+
+
+vec3 sunspot(in vec2 uv) {
+    float p = (PerlinNoise2D(uv.x * 10.0, uv.y * 10.0));
+    return -pow(p, 7.0) * vec3(1.0,1.0,1.0) * darkSpots;
+}
+
+vec3 thunder(in vec2 uv) {
+    float p = (fbm(uv * thunderSize, iGlobalTime * thunderInterval));
+    return (pow(p, 35.0)) * vec3(1.0 + thunderR,1.0 + thunderG,1.0 + thunderB) * thunderStrength;
+}
+
+vec3 cloud(in vec3 pos) {
+    vec2 uv;
+    uv.x = atan( pos.x,  pos.z * 2.0) * 1.5;
+    uv.y = asin( pos.y ) + 1.0;
+    return vec3(1.5,0.5,0.5);
+}
+
+vec2 _uv;
 vec3 doMaterial( in vec3 pos )
 {
     vec2 uv;
-    uv.x = atan( pos.x, pos.z );
-    uv.y = asin( pos.y );
-    return distort( map( uv ) );
+    uv.x = atan( pos.x,  pos.z );
+    uv.y = asin( pos.y ) + 1.0;
+    _uv = uv;
+    vec3 color = sunspot(uv) + distort( map( uv ) );
+    return color;
+}
+
+vec3 doEffect( in vec3 pos ) {
+    return thunder(_uv);
 }
 
 vec3 doMaterial2( in vec2 uv )
@@ -207,27 +247,27 @@ vec3 doLighting( in vec3 n, in vec3 c, in vec3 rd, in vec3 rdc )
     float ndl = dot( n, l );
     float ndr = dot( n, -rd );
     float ldr = dot( l, rd );
-    float f   = max( ndl, 0.0 ) + .0;
+    float f   = max( ndl, 0.0 ) + Staralike;
     float g   = ldr * smoothstep( 0.0, 0.01, ndr ) * pow( 1.0 - ndr, 10.0 );
-    return clamp( f * c + g * col_star, 0.0, 1.5 );
+    return clamp( f * c + g * col_star, 0.0, 1.1 );
 }
 
-float doFlare( in vec2 uv, in vec2 dir, float s )
-{
-    float d = length( uv - dot( uv, dir ) * dir );
-    float f = 0.0;
-    f += max( pow( 1.0 - d, 128.0 ) * ( 1.0   * s - length( uv ) ), 0.0 );
-    f += max( pow( 1.0 - d,  64.0 ) * ( 0.5   * s - length( uv ) ), 0.0 );
-    f += max( pow( 1.0 - d,  32.0 ) * ( 0.25  * s - length( uv ) ), 0.0 );
-    f += max( pow( 1.0 - d,  16.0 ) * ( 0.125 * s - length( uv ) ), 0.0 );
-    return f;
-}
+// float doFlare( in vec2 uv, in vec2 dir, float s )
+// {
+//     float d = length( uv - dot( uv, dir ) * dir );
+//     float f = 0.0;
+//     f += max( pow( 1.0 - d, 128.0 ) * ( 1.0   * s - length( uv ) ), 0.0 );
+//     f += max( pow( 1.0 - d,  64.0 ) * ( 0.5   * s - length( uv ) ), 0.0 );
+//     f += max( pow( 1.0 - d,  32.0 ) * ( 0.25  * s - length( uv ) ), 0.0 );
+//     f += max( pow( 1.0 - d,  16.0 ) * ( 0.125 * s - length( uv ) ), 0.0 );
+//     return f;
+// }
 
-float doLensGlint( in vec2 uv, in vec2 c, float r, float w )
-{
-    float l = length( uv - c );
-    return length( c ) * smoothstep( 0.0, w * r, l ) * ( 1.0 - smoothstep( w * r, r, l ) );
-}
+// float doLensGlint( in vec2 uv, in vec2 c, float r, float w )
+// {
+//     float l = length( uv - c );
+//     return length( c ) * smoothstep( 0.0, w * r, l ) * ( 1.0 - smoothstep( w * r, r, l ) );
+// }
 
 mat3 cammat;
 vec3 campos;
@@ -251,9 +291,8 @@ vec3 render( in vec2 uv )
         vec3 nor = normalize( pos );
         c = doMaterial( pos );
         c = doLighting( nor, c, rd, rdc );
+        c += doEffect( pos );
     }
-    
-    
     return c;
 }
 
