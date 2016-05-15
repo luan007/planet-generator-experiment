@@ -87,8 +87,10 @@ float PerlinNoise2D(float x,float y)
     float sum = 0.0;
     float frequency = 0.0;
     float amplitude = 0.0;
-    for(int i=firstOctave;i<octaves + firstOctave;i++)
+    for(int i=0; i< 9999 ;i++)
     {
+        if(i>octaves + firstOctave) {break;}
+        if(i < firstOctave) continue;
         frequency = pow(2.0,float(i));
         amplitude = pow(persistence,float(i));
         sum = sum + InterpolationNoise(changeX*frequency,y*frequency)*amplitude;
@@ -147,9 +149,12 @@ vec2 field(vec2 p)
 
 vec3 distort( in vec2 p )
 {
-    for( float i = 0.0; i < distort_iterations; ++i )
+    for( float i = 0.0; i < 999.0; ++i )
     {
         p += field( p ) / distort_iterations;
+        if(i >= distort_iterations) {
+            break;
+        }
     }
     //vec3 s = 2.5 * texture2D( iChannel0, vec2( 0.0, p.y * tex_scale ) ).xyz;
 	vec3 s = Tmut * vec3(PerlinNoise2D(p.x, p.y) * Rmut + Roff, PerlinNoise2D(p.x, p.y) * Gmut + Goff, PerlinNoise2D(p.x, p.y) * Bmut + Boff);

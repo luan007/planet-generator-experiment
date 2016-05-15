@@ -122,6 +122,7 @@ var scale = 0;
 function render() {
 
     shader.uniforms['iGlobalTime'].value = .00025 * (Date.now() - start);
+    shader.uniforms['perlinOffset'].value = .0025 * (Date.now() - start);
 
     // camera.position.x = 100 * Math.sin( phi ) * Math.cos( theta );
     // camera.position.y = 100 * Math.cos( phi );
