@@ -9,34 +9,33 @@
 uniform float iGlobalTime;
 uniform vec2 iResolution;
 
-uniform float distort_iterations = 1.3;
-uniform float time_scale = .0; //ru dong
+uniform float distort_iterations;
+uniform float time_scale; //ru dong
 
-uniform vec3 col_star = vec3( 1.0, 0.7, 0.5 );
-uniform vec3 pos_star = vec3( 0.0, 9.0, 30.0 );
-uniform vec3 world_up = vec3( 0.0, 1.0, 0.0 );
-uniform int firstOctave = 0;
-uniform int octaves = 12;
-uniform float persistence = 0.1;
-uniform float perlinMagnitude = .0;
-uniform float perlinOffset = 113.;
+const vec3 col_star = vec3( 1.0, 0.7, 0.5 );
+const vec3 pos_star = vec3( 0.0, 9.0, 30.0 );
+const vec3 world_up = vec3( 0.0, 1.0, 0.0 );
+uniform int firstOctave;
+uniform int octaves;
+uniform float persistence;
+uniform float perlinMagnitude;
+uniform float perlinOffset;
 
-uniform float strX = 2.2;
-uniform float strY = 2.2;
-uniform float movX = 0.1;
-uniform float movY = 0.0;
+uniform float strX;
+uniform float strY;
+uniform float movX;
+uniform float movY;
+uniform float Roff;
+uniform float Rmut;
+uniform float Goff;
+uniform float Gmut;
+uniform float Boff;
+uniform float Bmut;
+uniform float Tmut;
 
-uniform float Roff = 0.5;
-uniform float Rmut = 10.4;
-uniform float Goff = 1.233;
-uniform float Gmut = 8.4;
-uniform float Boff = 3.1;
-uniform float Bmut = 3.9;
-uniform float Tmut = 0.5;
+uniform float camRot;
 
-uniform float camRot = .93;
-
-uniform float perlinDepth = 3.0;
+uniform float perlinDepth;
 
 
 
