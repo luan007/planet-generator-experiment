@@ -87,7 +87,7 @@ float PerlinNoise2D(float x,float y)
     float sum = 0.0;
     float frequency = 0.0;
     float amplitude = 0.0;
-    for(int i=0; i< 9999 ;i++)
+    for(int i = 0; i < 9999 ;i++)
     {
         if(i>octaves + firstOctave) {break;}
         if(i < firstOctave) continue;
@@ -125,6 +125,7 @@ float noise( in vec3 p )
 float fbm( in vec2 p, float t )
 {
     float f;
+    t += perlinMagnitude * iGlobalTime;
     f  = 0.5000 * noise( vec3( p, t ) ); p *= 2.1;
     f += 0.2500 * noise( vec3( p, t ) );p *= 2.2;
     f += 0.1250 * noise( vec3( p, t ) );p *= 2.3;

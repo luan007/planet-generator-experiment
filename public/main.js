@@ -31,26 +31,49 @@ function init() {
         uniforms: {
             iGlobalTime: { type: "f", value: 0.0 },
             iResolution: { type: "v2", value: new THREE.Vector2(w * devicePixelRatio, h * devicePixelRatio) },
-            distort_iterations : { type: "f", value: 1.3 },
-            time_scale : { type: "f", value: 0 },
+            // distort_iterations : { type: "f", value: 3.3 },
+            // time_scale : { type: "f", value: 0. },
+            // firstOctave : { type: "i", value: 0 },
+            // octaves : { type: "i", value: 15 },
+            // persistence : { type: "f", value: 0.1 },
+            // perlinMagnitude : { type: "f", value: 0.0 },
+            // perlinOffset : { type: "f", value: 113 },
+            // strX : { type: "f", value: 2.2 },
+            // strY : { type: "f", value: 2.2 },
+            // movX : { type: "f", value: 0.0 },
+            // movY : { type: "f", value: 0.0 },
+            // Roff : { type: "f", value: 0.5 },
+            // Rmut : { type: "f", value: 15.4 },
+            // Goff : { type: "f", value: 1.233 },
+            // Gmut : { type: "f", value: 8.4 },
+            // Boff : { type: "f", value: 3.1 },
+            // Bmut : { type: "f", value: 3.9 },
+            // Tmut : { type: "f", value: 0.5 },
+            // camRot : { type: "f", value: 0.33 },
+            // perlinDepth : { type: "f", value: 3.0 },
+            
+            
+            distort_iterations : { type: "f", value: 3.3 },
+            time_scale : { type: "f", value: 0.5 },
             firstOctave : { type: "i", value: 0 },
-            octaves : { type: "i", value: 12 },
+            octaves : { type: "i", value: 10 },
             persistence : { type: "f", value: 0.1 },
-            perlinMagnitude : { type: "f", value: 0 },
+            perlinMagnitude : { type: "f", value: 0.5 },
             perlinOffset : { type: "f", value: 113 },
-            strX : { type: "f", value: 2.2 },
+            strX : { type: "f", value: 0.3 },
             strY : { type: "f", value: 2.2 },
-            movX : { type: "f", value: 0.1 },
+            movX : { type: "f", value: 0.0 },
             movY : { type: "f", value: 0.0 },
-            Roff : { type: "f", value: 0.5 },
-            Rmut : { type: "f", value: 10.4 },
-            Goff : { type: "f", value: 1.233 },
+            Roff : { type: "f", value: 4.5 },
+            Rmut : { type: "f", value: 15.4 },
+            Goff : { type: "f", value: 4.233 },
             Gmut : { type: "f", value: 8.4 },
-            Boff : { type: "f", value: 3.9 },
-            Bmut : { type: "f", value: 0.5 },
+            Boff : { type: "f", value: 0.1 },
+            Bmut : { type: "f", value: 3.0 },
             Tmut : { type: "f", value: 0.5 },
-            camRot : { type: "f", value: 0.93 },
-            perlinDepth : { type: "f", value: 3.0 },
+            camRot : { type: "f", value: 0.33 },
+            perlinDepth : { type: "f", value: 1.0 },
+             
         },
         vertexShader: basicVertex,
         fragmentShader: pixelShader,
@@ -67,9 +90,8 @@ function init() {
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(w, h);
     container.appendChild(renderer.domElement);
+    
     // renderer.domElement.style.display = "none";
-
-
 
     // scene2 = new THREE.Scene();
 
@@ -122,7 +144,7 @@ var scale = 0;
 function render() {
 
     shader.uniforms['iGlobalTime'].value = .00025 * (Date.now() - start);
-    shader.uniforms['perlinOffset'].value = .0025 * (Date.now() - start);
+    // shader.uniforms['perlinOffset'].value = .0015 * (Date.now() - start);
 
     // camera.position.x = 100 * Math.sin( phi ) * Math.cos( theta );
     // camera.position.y = 100 * Math.cos( phi );
