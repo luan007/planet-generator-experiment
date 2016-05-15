@@ -1,6 +1,7 @@
 
 var socket = io('http://localhost:7777');
 var dt = [];
+var cur = [];
 socket.on('data', function (data) {
     // console.log(data);
     console.log(data);
@@ -169,6 +170,19 @@ function init() {
 var scale = 0;
 
 function render() {
+
+
+//easing
+    for(var i = 0; i < Math.max(cur.length, dt.length); i++) {
+        if(cur[i] == undefined) { cur[i] = 0; }
+        if(dt[i] == undefined) continue;
+        if(Math.abs(cur[i] - dt[i]) < 0.01) {
+            cur[i] = dt[i];
+            continue;
+        }
+        cur[i] += (dt[i] - cur[i]) * 0.8;
+    }
+
 
     shader.uniforms['iGlobalTime'].value = .00025 * (Date.now() - start);
     // shader.uniforms['perlinOffset'].value = .0015 * (Date.now() - start);
