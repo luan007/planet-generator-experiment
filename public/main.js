@@ -1,3 +1,22 @@
+
+var socket = io('http://localhost:7777');
+var dt = [];
+socket.on('data', function (data) {
+    // console.log(data);
+    console.log(data);
+    for(var i = 0; i < data.length; i++){
+        if(data[i] !== undefined) {
+            dt[i] = data[i];
+        }
+    }
+});
+
+socket.on('change', function (data) {
+    console.log(data);
+    dt[data.k] = data.v;
+});
+
+
 function addLight(h, s, l, x, y, z) {
     var light = new THREE.PointLight(0xffffff, 1, 10000);
     light.color.setHSL(h, s, l);
@@ -51,37 +70,37 @@ function init() {
             // Tmut : { type: "f", value: 0.5 },
             // camRot : { type: "f", value: 0.33 },
             // perlinDepth : { type: "f", value: 3.0 },
-            
-            
-            distort_iterations : { type: "f", value: 3.3 },
-            time_scale : { type: "f", value: 0.5 },
-            firstOctave : { type: "i", value: 0 },
-            octaves : { type: "i", value: 10 },
-            persistence : { type: "f", value: 0.1 },
-            perlinMagnitude : { type: "f", value: 0.5 },
-            perlinOffset : { type: "f", value: 113 },
-            strX : { type: "f", value: 0.3 },
-            strY : { type: "f", value: 2.2 },
-            movX : { type: "f", value: 0.0 },
-            movY : { type: "f", value: 0.0 },
-            Roff : { type: "f", value: 4.5 },
-            Rmut : { type: "f", value: 15.4 },
-            Goff : { type: "f", value: 4.233 },
-            Gmut : { type: "f", value: 8.4 },
-            Boff : { type: "f", value: 0.1 },
-            Bmut : { type: "f", value: 3.0 },
-            Tmut : { type: "f", value: 0.5 },
-            camRot : { type: "f", value: 1.33 },
-            Staralike: {type:"f", value:0},
-            thunderR: {type:"f", value:0},
-            thunderG: {type:"f", value:0},
-            thunderB: {type:"f", value:0},
-            thunderInterval: {type:"f", value:0},
-            thunderStrength: {type:"f", value:0},
-            thunderSize: {type:"f", value:0},
-            darkSpots: {type:"f", value:0},
-            perlinDepth : { type: "f", value: 1.0 },
-             
+
+
+            distort_iterations: { type: "f", value: 3.3 },
+            time_scale: { type: "f", value: 0.5 },
+            firstOctave: { type: "i", value: 0 },
+            octaves: { type: "i", value: 10 },
+            persistence: { type: "f", value: 0.1 },
+            perlinMagnitude: { type: "f", value: 0.5 },
+            perlinOffset: { type: "f", value: 113 },
+            strX: { type: "f", value: 0.3 },
+            strY: { type: "f", value: 2.2 },
+            movX: { type: "f", value: 0.0 },
+            movY: { type: "f", value: 0.0 },
+            Roff: { type: "f", value: 4.5 },
+            Rmut: { type: "f", value: 15.4 },
+            Goff: { type: "f", value: 4.233 },
+            Gmut: { type: "f", value: 8.4 },
+            Boff: { type: "f", value: 0.1 },
+            Bmut: { type: "f", value: 3.0 },
+            Tmut: { type: "f", value: 0.5 },
+            camRot: { type: "f", value: 1.33 },
+            Staralike: { type: "f", value: 0 },
+            thunderR: { type: "f", value: 0 },
+            thunderG: { type: "f", value: 0 },
+            thunderB: { type: "f", value: 0 },
+            thunderInterval: { type: "f", value: 0 },
+            thunderStrength: { type: "f", value: 0 },
+            thunderSize: { type: "f", value: 0 },
+            darkSpots: { type: "f", value: 0 },
+            perlinDepth: { type: "f", value: 1.0 },
+
         },
         vertexShader: basicVertex,
         fragmentShader: pixelShader,
@@ -95,10 +114,10 @@ function init() {
     quad.position.z = 200;
     scene.add(quad);
 
-    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
     container.appendChild(renderer.domElement);
-    
+
     // renderer.domElement.style.display = "none";
 
     // scene2 = new THREE.Scene();
