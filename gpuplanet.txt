@@ -6,51 +6,29 @@
 // STAR/FLARE (mu6k): https://www.shadertoy.com/view/4sX3Rs
 // RAY V SPHERE (reinder): https://www.shadertoy.com/view/4tjGRh
 
-uniform float iGlobalTime;
-uniform vec2 iResolution;
-
-uniform float distort_iterations;
-uniform float time_scale; //ru dong
+const float distort_iterations = 1.3;
+const float tex_scale = 0.005;
+//const float time_scale = 0.2; //ru dong
+const float time_scale = .0; //ru dong
 
 const vec3 col_star = vec3( 1.0, 0.7, 0.5 );
 const vec3 pos_star = vec3( 0.0, 9.0, 30.0 );
 const vec3 world_up = vec3( 0.0, 1.0, 0.0 );
-uniform int firstOctave;
-uniform int octaves;
-uniform float persistence;
-uniform float perlinMagnitude;
-uniform float perlinOffset;
-
-uniform float strX;
-uniform float strY;
-uniform float movX;
-uniform float movY;
-uniform float Roff;
-uniform float Rmut;
-uniform float Goff;
-uniform float Gmut;
-uniform float Boff;
-uniform float Bmut;
-uniform float Tmut;
-uniform float Staralike;
-uniform float darkSpots;
-uniform float camRot;
+const int firstOctave = 0;
+const int octaves = 5;
+const float persistence = 0.5;
 
 
+struct CameraInfo
+{
+    vec3 pos;
+    vec3 dir;
+    mat3 m;
+    mat3 mInv;
+};
 
-uniform float thunderR;
-uniform float thunderG;
-uniform float thunderB;
-uniform float thunderStrength;
-uniform float thunderInterval;
-uniform float thunderSize;
-
-uniform float perlinDepth;
-
-
-
-
-
+    
+    
 float noise(int x,int y)
 {   
     float fx = float(x);
@@ -93,22 +71,22 @@ float InterpolationNoise(float x, float y)
 
 float PerlinNoise2D(float x,float y)
 {
-    float changeX = x + iGlobalTime * perlinMagnitude + perlinOffset;
     float sum = 0.0;
-    float frequency = 0.0;
+    float frequency =0.0;
     float amplitude = 0.0;
-    for(int i = 0; i < 9999 ;i++)
+    for(int i=firstOctave;i<octaves + firstOctave;i++)
     {
-        if(i>octaves + firstOctave) {break;}
-        if(i < firstOctave) continue;
         frequency = pow(2.0,float(i));
         amplitude = pow(persistence,float(i));
-        sum = sum + InterpolationNoise(changeX*frequency,y*frequency)*amplitude;
+        sum = sum + InterpolationNoise(x*frequency,y*frequency)*amplitude;
     }
     
     return sum;
 }
 
+    
+    
+    
     
 float hash( float n ) { return fract(sin(n)*123.456789); }
 
@@ -135,7 +113,6 @@ float noise( in vec3 p )
 float fbm( in vec2 p, float t )
 {
     float f;
-    t += perlinMagnitude * iGlobalTime;
     f  = 0.5000 * noise( vec3( p, t ) ); p *= 2.1;
     f += 0.2500 * noise( vec3( p, t ) );p *= 2.2;
     f += 0.1250 * noise( vec3( p, t ) );p *= 2.3;
@@ -160,26 +137,21 @@ vec2 field(vec2 p)
 
 vec3 distort( in vec2 p )
 {
-    for( float i = 0.0; i < 999.0; ++i )
+    for( float i = 0.0; i < distort_iterations; ++i )
     {
         p += field( p ) / distort_iterations;
-        if(i >= distort_iterations) {
-            break;
-        }
     }
     //vec3 s = 2.5 * texture2D( iChannel0, vec2( 0.0, p.y * tex_scale ) ).xyz;
-	vec3 s = Tmut * vec3(PerlinNoise2D(p.x, p.y) * Rmut + Roff, PerlinNoise2D(p.x, p.y) * Gmut + Goff, PerlinNoise2D(p.x, p.y) * Bmut + Boff);
-   // vec3 s = Tmut * vec3();
-    return fbm( p, perlinDepth ) * s;
+	vec3 s = vec3(PerlinNoise2D(p.x, p.y) * .7 + 0.3, PerlinNoise2D(p.x, p.y) * 0.5 + .5, PerlinNoise2D(p.x, p.y) * 0.3 + 0.8);
+    return fbm( p, 3.0 ) * s;
 }
 
 vec2 map( in vec2 uv )
 {
-    uv.x *= strX;
+    uv.x *= 5.;
     //rotate ballball
-    uv.x += movX * iGlobalTime;
-    uv.y *= strY;
-    uv.y += movY * iGlobalTime;
+    uv.x += 0.05 * iGlobalTime;
+    uv.y *= 5.;
     return uv;
 }
 
@@ -198,42 +170,12 @@ float doCastSphere( in vec3 p, in vec3 rd )
     return -1.0;
 }
 
-// vec3 thunder(in vec2 uv) {
-//     float p = (PerlinNoise2D(uv.x * 30.0, uv.y * 30.0));
-//     return p * p * p * vec3(1.0,1.0,1.0) * 50.0;
-// }
-
-
-vec3 sunspot(in vec2 uv) {
-    float p = (PerlinNoise2D(uv.x * 10.0, uv.y * 10.0));
-    return -pow(p, 3.0) * vec3(1.0,1.0,1.0) * darkSpots;
-}
-
-vec3 thunder(in vec2 uv) {
-    float p = (fbm(uv * thunderSize, iGlobalTime * thunderInterval));
-    return (pow(p, 35.0)) * vec3(1.0 + thunderR,1.0 + thunderG,2.0 + thunderB) * thunderStrength;
-}
-
-vec3 cloud(in vec3 pos) {
-    vec2 uv;
-    uv.x = atan( pos.x,  pos.z * 2.0) * 1.5;
-    uv.y = asin( pos.y ) + 1.0;
-    return vec3(1.5,0.5,0.5);
-}
-
-vec2 _uv;
 vec3 doMaterial( in vec3 pos )
 {
     vec2 uv;
-    uv.x = atan( pos.x,  pos.z );
-    uv.y = asin( pos.y ) + 1.0;
-    _uv = uv;
-    vec3 color = sunspot(uv) + distort( map( uv ) );
-    return color;
-}
-
-vec3 doEffect( in vec3 pos ) {
-    return thunder(_uv);
+    uv.x = atan( pos.x, pos.z );
+    uv.y = asin( pos.y );
+    return distort( map( uv ) );
 }
 
 vec3 doMaterial2( in vec2 uv )
@@ -247,27 +189,28 @@ vec3 doLighting( in vec3 n, in vec3 c, in vec3 rd, in vec3 rdc )
     float ndl = dot( n, l );
     float ndr = dot( n, -rd );
     float ldr = dot( l, rd );
-    float f   = max( ndl, 0.0 ) + Staralike;
-    float g   = ldr * smoothstep( 0.0, 0.01, ndr ) * pow( 1.0 - ndr, 10.0 );
-    return clamp( f * c + g * col_star, 0.0, 1.1 );
+    float f   = max( ndl, 0.0 ) + 0.002;
+    float g   = ldr * smoothstep( 0.0, 0.1, ndr ) * pow( 1.0 - ndr, 10.0 );
+    return clamp( f * c + g * col_star, 0.0, 1.0 );
 }
 
-// float doFlare( in vec2 uv, in vec2 dir, float s )
-// {
-//     float d = length( uv - dot( uv, dir ) * dir );
-//     float f = 0.0;
-//     f += max( pow( 1.0 - d, 128.0 ) * ( 1.0   * s - length( uv ) ), 0.0 );
-//     f += max( pow( 1.0 - d,  64.0 ) * ( 0.5   * s - length( uv ) ), 0.0 );
-//     f += max( pow( 1.0 - d,  32.0 ) * ( 0.25  * s - length( uv ) ), 0.0 );
-//     f += max( pow( 1.0 - d,  16.0 ) * ( 0.125 * s - length( uv ) ), 0.0 );
-//     return f;
-// }
+float doFlare( in vec2 uv, in vec2 dir, float s )
+{
+    float d = length( uv - dot( uv, dir ) * dir );
+    float f = 0.0;
+    f += max( pow( 1.0 - d, 128.0 ) * ( 1.0   * s - length( uv ) ), 0.0 );
+    f += max( pow( 1.0 - d,  64.0 ) * ( 0.5   * s - length( uv ) ), 0.0 );
+    f += max( pow( 1.0 - d,  32.0 ) * ( 0.25  * s - length( uv ) ), 0.0 );
+    f += max( pow( 1.0 - d,  16.0 ) * ( 0.125 * s - length( uv ) ), 0.0 );
+    return f;
+}
 
-// float doLensGlint( in vec2 uv, in vec2 c, float r, float w )
-// {
-//     float l = length( uv - c );
-//     return length( c ) * smoothstep( 0.0, w * r, l ) * ( 1.0 - smoothstep( w * r, r, l ) );
-// }
+float doLensGlint( in vec2 uv, in vec2 c, float r, float w )
+{
+    float l = length( uv - c );
+    return length( c ) * smoothstep( 0.0, w * r, l ) * ( 1.0 - smoothstep( w * r, r, l ) );
+}
+
 
 mat3 cammat;
 vec3 campos;
@@ -281,7 +224,7 @@ vec3 render( in vec2 uv )
     vec3 rdc = cammat * vec3( 0.0, 0.0, 1.0 );
     
     // background stars
-    vec3 c = vec3(0.0,0.0,0.0);
+    vec3 c;
     
     // planet
     float t = doCastSphere( campos, rd );
@@ -291,8 +234,9 @@ vec3 render( in vec2 uv )
         vec3 nor = normalize( pos );
         c = doMaterial( pos );
         c = doLighting( nor, c, rd, rdc );
-        c += doEffect( pos );
     }
+    
+    
     return c;
 }
 
@@ -319,14 +263,15 @@ void doCamera( in vec3 pos, in vec3 dir )
     cammat = m;
     cammInv = mInv;
 }
-void main ()
+
+void mainImage (out vec4 fragColor, in vec2 fragCoord)
 {
     vec2 uv = gl_FragCoord.xy / iResolution.xy - 0.5;
     uv.x *= iResolution.x / iResolution.y;
     
     // camera default movement
-    float cx = cos( camRot * iGlobalTime + 1.1 );
-    float sx = sin( camRot * iGlobalTime + 1.1 );
+    float cx = cos( 0. * iGlobalTime + 1.1 );
+    float sx = sin( 0. * iGlobalTime + 1.1 );
     float cy = 0.;
     
     // camera position/direction
@@ -334,16 +279,14 @@ void main ()
     vec3 camDir = normalize( -camPos );
 
     // render scene
-    vec3 c = vec3(.0, .0, .0);
+    vec3 c = render2( uv );
     doCamera( camPos, camDir );
-    c += render( uv ) * 1.0;
+    c = render( uv ) * 0.5;
     //vec3 c = vec3( distort( map( uv ) ) );
     //vec3 c = vec3( fbm( map( uv ), iGlobalTime ) );
     
     // gamma correction
     c = pow( c, vec3( 0.4545 ) );
-    c.r = clamp(c.r, 0.0, 1.0);
-    c.g = clamp(c.g, 0.0, 1.0);
-    c.b = clamp(c.b, 0.0, 1.0);
-    gl_FragColor = vec4( c, 1.0 );
+    
+    fragColor = vec4( c, 1.0 );
 }

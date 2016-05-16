@@ -23,7 +23,7 @@ io.on("connection", function(client){
     client.emit("data", d);
     client.on("change", function(kv) {
         d[kv.k] = kv.v;
-        io.emit("change", kv);
+        io.emit("cc", kv);
     });
 });
 

@@ -79,6 +79,7 @@
             background: linear-gradient(45deg, rgba(59, 173, 227, 1) 0%, rgba(87, 111, 230, 1) 25%, rgba(152, 68, 183, 1) 51%, rgba(255, 53, 127, 1) 100%);
             filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#3bade3 ', endColorstr='#ff357f ', GradientType=1);
             height: 2px;
+            border-radius: 999px;
         }
         
         input[type=range].r::-webkit-slider-runnable-track {
@@ -90,6 +91,7 @@
             background: -ms-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 30, 30, 1) 100%);
             background: linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 30, 30, 1) 100%);
             height: 2px;
+            border-radius: 999px;
         }
         
         input[type=range].g::-webkit-slider-runnable-track {
@@ -101,6 +103,7 @@
             background: -ms-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(30, 255, 30, 1) 100%);
             background: linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(30, 255, 30, 1) 100%);
             height: 2px;
+            border-radius: 999px;
         }
         
         input[type=range].b::-webkit-slider-runnable-track {
@@ -112,26 +115,32 @@
             background: -ms-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 255, 1) 100%);
             background: linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 255, 1) 100%);
             height: 2px;
+            border-radius: 999px;
         }
         
         input[type=range].w::-webkit-slider-runnable-track {
             -webkit-appearance: none;
             background: rgba(59, 173, 227, 1);
-            background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            background: -o-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            background: -ms-linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
-            background: linear-gradient(45deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: -moz-linear-gradient(45deg, rgba(255,255,255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: -webkit-linear-gradient(45deg, rgba(255,255,255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: -o-linear-gradient(45deg, rgba(255,255,255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: -ms-linear-gradient(45deg, rgba(255,255,255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+            background: linear-gradient(45deg, rgba(255,255,255, 1) 0%, rgba(255, 255, 255, 1) 100%);
             height: 2px;
+            border-radius: 999px;
         }
         
         input[type=range]:focus {
             outline: none;
         }
         
+        input[type=range]:focus::-webkit-slider-thumb {
+            border: 2px solid #fff;
+        }
+        
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            border: 2px solid;
+            border: 2px solid #aaa;
             border-radius: 50%;
             height: 25px;
             width: 25px;
@@ -140,8 +149,8 @@
             bottom: 11px;
             background-color: #1d1c25;
             cursor: -webkit-grab;
-            -webkit-transition: border 1000ms ease;
-            transition: border 1000ms ease;
+            -webkit-transition: border 300ms ease;
+            transition: border 300ms ease;
         }
         
         .panel {
@@ -183,10 +192,10 @@
                 </div>
                 <span>BASE</span>
             </div>
-            <input type="range" class='range r' id="test" />
-            <input type="range" class='range g' id="test" />
-            <input type="range" class='range b' id="test" />
-            <input type="range" class='range' id="test" />
+            <input type="range" class='range r' id="test" step="0.05" />
+            <input type="range" class='range g' id="test" step="0.05" />
+            <input type="range" class='range b' id="test" step="0.05" />
+            <input type="range" class='range' id="test" step="0.05" />
 
             <div class='line'>
                 <div class='icoholder'>
@@ -194,53 +203,64 @@
                 </div>
                 <span>VARIANTS</span>
             </div>
-            <input type="range" class='range r' id="test" />
-            <input type="range" class='range g' id="test" />
-            <input type="range" class='range b' id="test" />
+            <input type="range" class='range r' id="test" step="0.05" />
+            <input type="range" class='range g' id="test" step="0.05" />
+            <input type="range" class='range b' id="test" step="0.05" />
 
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/atten.svg" />
                 </div>
-                <input type="range" class='range' id="test" />
+                <input type="range" class='range' id="test"  step="0.05"  />
             </div>
 
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/wind.svg" />
                 </div>
-                <input type="range" class='range' id="test" />
+                <input type="range" class='range' id="test"  step="0.05" />
             </div>
 
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/turbulance.svg" />
                 </div>
-                <input type="range" class='range' id="test" />
+                <input type="range" class='range' id="test" step="0.05"  />
             </div>
 
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/windblow.svg" />
                 </div>
-                <input type="range" class='range' id="test" />
+                <input type="range" class='range' id="test"  step="0.05" />
             </div>
 
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/magic.svg" />
                 </div>
-                <input type="range" class='range' id="test" />
+                <input type="range" class='range' id="test"  step="0.05" />
+            </div>
+            <div class='line'>
+                <div class='icoholder'>
+                    <img src="/icons/sun.svg" />
+                </div>
+                <input type="range" class='range' id="test"  step="0.05" />
+            </div>
+            <div class='line'>
+                <div class='icoholder'>
+                    <img src="/icons/lightning.svg" />
+                </div>
+                <input type="range" class='range' id="test"  step="0.05" />
             </div>
             <br>
             <div class='line'>
                 <div class='icoholder'>
                     <img src="/icons/gears.svg" />
                 </div>
-                <span>AXIS SHIFT (X/Y)</span>
+                <span>CAMERA</span>
             </div>
-            <input type="range" class='range w' id="test" />
-            <input type="range" class='range w' id="test" />
+            <input type="range" class='range w' id="test" step="0.05"  />
 
         </div>
 
@@ -255,7 +275,7 @@
                     all[i].value = data[i];
                 }
             });
-            socket.on('change', function (kv) {
+            socket.on('cc', function (kv) {
                 // console.log(data);
                 console.log(kv);
                 all[kv.k].value = kv.v;
@@ -264,7 +284,8 @@
             for(var i = 0; i < all.length; i++) {
                 (function(i){
                     var prev = all[i].value;
-                    all[i].onchange = function(v) {
+                    all[i].oninput  = function(v) {
+                        console.log(v);
                         if(v.srcElement.value !== prev) {
                             console.log(i, v.srcElement.value);
                             socket.emit("change", {
@@ -279,7 +300,10 @@
             
         </script>
 
-
+        <br>
+        <br>
+        <br>
+        <br>
         <!--<div class="tribs">
             <a href="http://codepen.io/borian/pen/oKwGA">Canvas Background by borian</a>
         </div>-->
